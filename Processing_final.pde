@@ -10,11 +10,13 @@ float tiempo=0;
 int estado_boton;
 int disparando;
 int x;
+float velocidad_estatica;
+float angulo_estatico;
 
 void setup() {
   size(1200, 500);
   println(Serial.list());
-  Puerto = new Serial(this, "COM4", 4800);
+  Puerto = new Serial(this, "COM5", 4800);
   Puerto.bufferUntil('\n');
 }
 
@@ -56,12 +58,14 @@ void draw() {
  
   if(estado_boton==1){ // Cambiar el estado de 'disparando' a 1 cuando se pulse el botón
       disparando = 1;
+      velocidad_estatica = velocidad;
+      angulo_estatico = radianes;
   }
 
   if(disparando == 1){ // Mover la pelota cuando 'disparando' sea igual a 1
 
-    posicion_x = velocidad*cos(radianes)*tiempo;
-    posicion_y = velocidad*sin(radianes)*tiempo+(0.5)*(9.8)*(tiempo * tiempo);
+    posicion_x = velocidad_estatica*cos(angulo_estatico)*tiempo;
+    posicion_y = velocidad_estatica*sin(angulo_estatico)*tiempo+(0.5)*(9.8)*(tiempo * tiempo);
     fill(255, 255, 255);
     ellipse(posicion_x,posicion_y,10,10);
     tiempo = tiempo + 0.1;
