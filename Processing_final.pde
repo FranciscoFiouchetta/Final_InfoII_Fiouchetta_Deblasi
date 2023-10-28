@@ -1,39 +1,80 @@
-import processing.sound.*;
-
-import ddf.minim.*;
 import processing.serial.*;
-
-Minim cadena;
-AudioPlayer cancion;
 Serial Puerto;
 
+int boton_mouse=0;
+
 float velocidad;
+float radianes;
 float angulo;
 float velocidad_estatica;
 float angulo_estatico;
-float radianes;
+
 float posicion_x=0;
 float posicion_y=0;
 float tiempo=0;
+
 int estado_boton;
 int disparando;
 int objetivo_x;
 int objetivo_y;
+
 int puntuacion_rojo=0;
 int puntuacion_amarillo=0;
 int puntuacion_blanco=0;
 
 void setup() {
-  size(1100, 500);
+  size(1300, 500);
   println(Serial.list()); 
-  Puerto = new Serial(this, "COM5", 4800);
+  Puerto = new Serial(this, "COM4",4800);
   Puerto.bufferUntil('\n');
-  cadena=new Minim(this);
-  cancion=cadena.loadFile("Get Ready for This.mp3");
 }
 
 void draw() {
- 
+  
+  background(0,160,0);
+  translate(0,500);
+  noStroke();
+  textSize(40);
+  
+  fill(255,255,255);
+  rect(350,-140,400,40);
+  fill(0,0,0);
+  text("INFO",510,-107);
+  
+  fill(255,255,255);
+  rect(350,-200,400,40);
+  fill(0,0,0);
+  text("PUNTUACIONES",415,-167);
+  
+  fill(255,255,255);
+  rect(350,-260,400,40);
+  fill(0,0,0);
+  text("JUGAR",490,-227);
+  
+  fill(255,255,255);
+  rect(240,-400,620,60);
+  fill(0,0,0);
+  text("DEBLACHETTA PARABOLIC CANNON",250,-357);
+  
+  if(mousePressed == true){
+    boton_mouse = 1;
+  }
+  if(mouseX < 750 && mouseX > 350 && mouseY < 280 && mouseY > 240 && mousePressed == true){
+    boton_mouse = 1;
+  }
+  if(boton_mouse == 1){
+     JUEGO();
+  }
+  if(mouseX < 750 && mouseX > 350 && mouseY < 340 && mouseY > 300 && mousePressed == true){
+  }
+  if(mouseX < 750 && mouseX > 350 && mouseY < 400 && mouseY > 360 && mousePressed == true){
+  }
+
+}
+void JUEGO(){
+  
+  translate(0,-500);
+  
   String inString = Puerto.readStringUntil('\n'); // Lee la cadena hasta encontrar un salto de línea
 
   if (inString != null) {
@@ -49,9 +90,9 @@ void draw() {
     velocidad = float(part2);
     estado_boton = int(part3);
 
-    print(angulo); // Muestra el valor convertido en la consola
-    print(" ",velocidad); 
-    println(" ",estado_boton);
+    //print(angulo); // Muestra el valor convertido en la consola
+    //print(" ",velocidad); 
+    //println(" ",estado_boton);
 
   }
  
@@ -103,38 +144,35 @@ void draw() {
   fill(255, 255, 255);
   rect(400,150,20,30);
   
-  /*
-  if((posicion_x > 400 && posicion_x < 402) && (posicion_y > 200 && posicion_y < 220)){
+  if((posicion_x > 400 && posicion_x < 420) && (posicion_y > 200 && posicion_y < 220)){
       puntuacion_rojo = 1;
+      posicion_x = 0;
+      posicion_y = 0;
+      disparando = 0;
+      tiempo = 0;
   }
-  if((posicion_x > 400 && posicion_x < 402) && ((posicion_y > 220 && posicion_y < 240) || (posicion_y < 200 && posicion_y > 180))){
+  
+  if((posicion_x > 400 && posicion_x < 420) && ((posicion_y > 220 && posicion_y < 240) || (posicion_y < 200 && posicion_y > 180))){
       puntuacion_amarillo = 1;
+      posicion_x = 0;
+      posicion_y = 0;
+      disparando = 0;
+      tiempo = 0;
   }
-  if((posicion_x > 400 && posicion_x < 402)  && ((posicion_y > 240 && posicion_y < 270) || (posicion_y < 180 && posicion_y > 150))){
+  
+  if((posicion_x > 400 && posicion_x < 420) && ((posicion_y > 240 && posicion_y < 270) || (posicion_y < 180 && posicion_y > 150))){
       puntuacion_blanco = 1;
+      posicion_x = 0;
+      posicion_y = 0;
+      disparando = 0;
+      tiempo = 0;
   }
-  if(posicion_y<0){
-    puntuacion_rojo = 0;
-    puntuacion_amarillo = 0;
-    puntuacion_blanco = 0;
-  }
-
-  stroke(0, 0, 0);
-  strokeWeight(1);
-  line(-40,200,1100,200);
   
-  stroke(0, 0, 0);
-  strokeWeight(1);
-  line(400,500,400,0);
-  
-  print("puntuacion_rojo: ",puntuacion_rojo);
-  print(" puntuacion_amarillo: ",puntuacion_amarillo);
-  println(" puntuacion_blanco: ",puntuacion_blanco);
-  
-  */
+  print(puntuacion_blanco);
+  print(puntuacion_amarillo);
+  println(puntuacion_rojo);
   
   int ValorRojo = int(map(velocidad, 0, 100, 0, 255));
-  //int ValorVerde = int(map(velocidad,0, 100,255,0));
   int ValorAzul = int(map(velocidad, 0, 100, 255, 0));
   color ColorBarra =  color(ValorRojo,0,ValorAzul);
  
@@ -148,10 +186,19 @@ void draw() {
   noStroke();
   rect(-20,-31,velocidad,10);
   
+  fill(255, 255, 255);
+  rect(-20,400,30,30);
+  
+  if(mouseX < 50 && mouseX > 20 && mouseY < 50 && mouseY > 20 && mousePressed == true){
+    boton_mouse = 0;
+  }
   
   rotate(radianes); // Cañón
   stroke(0, 255, 0);
   strokeWeight(10);
   line(20, 0, 35, 0);
-  
+
 }
+void PUNTUACIONES(){};
+void INFO(){}
+
