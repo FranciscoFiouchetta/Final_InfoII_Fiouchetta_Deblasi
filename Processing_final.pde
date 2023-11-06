@@ -24,20 +24,21 @@ int objetivo_y;
 
 int movimiento = 0;
 int cambiar_sentido = 1; // 1 ó (-1)
-int contacto = 0;
+int contacto = 4;
 int puntuacion = 0;
 int puntuacion_rojo=0;
 int puntuacion_amarillo=0;
 int puntuacion_blanco=0;
 
 boolean videoVisible = true;
+boolean videoFinalizado = false;
 
 void setup() {
   size(1100, 500);
-  frameRate(30);
-  video = new Movie(this, "C:/Users/User/Desktop/momo.mp4"); // Utiliza "/" en lugar de "\"
-  println(Serial.list()); 
-  Puerto = new Serial(this, "COM4",4800);
+  //frameRate(30);
+  video = new Movie(this, "C:/Users/admin/OneDrive/Escritorio/messi.mp4"); // Utilizar "/" en lugar de "\"
+  println(Serial.list());
+  Puerto = new Serial(this, "COM9",4800);
   Puerto.bufferUntil('\n');
 }
 
@@ -68,9 +69,6 @@ void draw() {
   fill(0,0,0);
   text("DEBLACHETTA PARABOLIC CANNON",250,-357);
   
-  if(mousePressed == true){
-    boton_mouse = 1;
-  }
   if(mouseX < 750 && mouseX > 350 && mouseY < 280 && mouseY > 240 && mousePressed == true){
     boton_mouse = 1;
   }
@@ -78,8 +76,16 @@ void draw() {
      JUEGO();
   }
   if(mouseX < 750 && mouseX > 350 && mouseY < 340 && mouseY > 300 && mousePressed == true){
+    boton_mouse = 2;
+  }
+  if(boton_mouse == 2){
+    PUNTUACIONES();
   }
   if(mouseX < 750 && mouseX > 350 && mouseY < 400 && mouseY > 360 && mousePressed == true){
+     boton_mouse = 3;
+  }
+  if(boton_mouse == 3){
+     INFO();
   }
 
 }
@@ -158,20 +164,6 @@ void JUEGO(){
   nivel_5();
   }
   
-  if(contacto==5){ //VIDEO
-    scale(1,-1);
-    if (videoVisible == true) {
-      video.play();
-      video.read();
-      image(video, 400, 200, 200, 200);
-    }
-    if (video.time() == 4) {
-      video.stop();
-      videoVisible = false; // Oculta el video al finalizar la reproducción.
-      clear();
-    }
-  }
-  
   int ValorRojo = int(map(velocidad, 0, 100, 0, 255));
   int ValorAzul = int(map(velocidad, 0, 100, 255, 0));
   color ColorBarra =  color(ValorRojo,0,ValorAzul);
@@ -197,8 +189,36 @@ void JUEGO(){
   stroke(0, 255, 0);
   strokeWeight(10);
   line(20, 0, 35, 0);
+  
+  if(contacto==5){ //VIDEO
+  rotate(-radianes);
+  scale(1,-1);
+    if (videoVisible == true) {
+      video.play();
+      video.read();
+      image(video, 310, -425, 400, 400);
+    }
 
+    if (2.0 == video.time()) {
+      for(int i=0;i<1;i++){
+      video.stop();
+      videoVisible = false; // Oculta el video al finalizar la reproducción.
+      videoFinalizado = true;
+      }
+    }
+    if(videoFinalizado == true){
+      noStroke();
+      fill(255,255,255);
+      rect(320,-233,400,40);
+      fill(0,0,0);
+      text("Volver a intentar",380,-200);
+    }
+  if(mouseX < 720 && mouseX > 320 && mouseY < -233 && mouseY > -273 && mousePressed == true){
+     contacto = 0;
+  }
+  }
 }
+
 void nivel_1(){
   
   fill(255, 0, 0); // Objetivo a golpear
@@ -518,4 +538,4 @@ void nivel_5(){
   
 }
 void PUNTUACIONES(){};
-void INFO(){}
+void INFO(){};
