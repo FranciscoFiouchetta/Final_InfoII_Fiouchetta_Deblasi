@@ -1,6 +1,10 @@
 import processing.serial.*;
 Serial Puerto;
 
+import processing.video.*;
+
+Movie video;
+
 int boton_mouse=0;
 
 float velocidad;
@@ -26,8 +30,12 @@ int puntuacion_rojo=0;
 int puntuacion_amarillo=0;
 int puntuacion_blanco=0;
 
+boolean videoVisible = true;
+
 void setup() {
   size(1100, 500);
+  frameRate(30);
+  video = new Movie(this, "C:/Users/User/Desktop/momo.mp4"); // Utiliza "/" en lugar de "\"
   println(Serial.list()); 
   Puerto = new Serial(this, "COM4",4800);
   Puerto.bufferUntil('\n');
@@ -99,7 +107,7 @@ void JUEGO(){
     println(" ",estado_boton);
 
   }
- 
+  
   background(0, 170, 228);
   radianes = angulo * PI/180;
   
@@ -149,10 +157,20 @@ void JUEGO(){
   if(contacto==4){
   nivel_5();
   }
-  if(contacto==5){
-
-  }
   
+  if(contacto==5){ //VIDEO
+    scale(1,-1);
+    if (videoVisible == true) {
+      video.play();
+      video.read();
+      image(video, 400, 200, 200, 200);
+    }
+    if (video.time() == 4) {
+      video.stop();
+      videoVisible = false; // Oculta el video al finalizar la reproducción.
+      clear();
+    }
+  }
   
   int ValorRojo = int(map(velocidad, 0, 100, 0, 255));
   int ValorAzul = int(map(velocidad, 0, 100, 255, 0));
@@ -174,11 +192,6 @@ void JUEGO(){
   if(mouseX < 50 && mouseX > 20 && mouseY < 50 && mouseY > 20 && mousePressed == true){
     boton_mouse = 0;
   }
-  
-  print(contacto);
-  print(puntuacion_blanco);
-  print(puntuacion_amarillo);
-  println(puntuacion_rojo);
   
   rotate(radianes); // Cañón
   stroke(0, 255, 0);
@@ -504,6 +517,5 @@ void nivel_5(){
   }
   
 }
-
 void PUNTUACIONES(){};
 void INFO(){}
