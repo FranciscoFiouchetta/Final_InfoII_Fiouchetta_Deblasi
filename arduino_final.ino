@@ -31,24 +31,54 @@ for(posicion=0;posicion<longtexto2;posicion++){
 lcd.scrollDisplayLeft();
 delay(200);
 }
-lcd.clear();
+//lcd.clear();
 }
 
 
 void setup() {
 lcd.init();
 lcd.backlight();
-
 Serial.begin(4800);
 bienvenida();
+//puntuaciones();
+//puntuaciones();
+//puntuaciones();
 lcd.clear();
 }
 
 void loop(){
 
-
-
 //lcd.clear();
+if (Serial.available() > 0) {
+     char letra = Serial.read();
+    if (letra == 'R') {
+    int puntuacion_rojo = Serial.parseInt();
+            lcd.setCursor(13, 1);
+            //lcd.print("Punt: ");
+            lcd.print(puntuacion_rojo);delay(1000);
+            
+            
+        }// Mostrar la puntuación recibida desde Processing
+   
+    else if (letra == 'A') {
+    int puntuacion_amarillo = Serial.parseInt();
+            lcd.setCursor(13, 1);
+            //lcd.print("Punt: ");
+            lcd.print(puntuacion_amarillo);
+            delay(1000);
+            
+            
+        }
+     else if (letra == 'B') {
+        int puntuacion_blanco = Serial.parseInt();
+           lcd.setCursor(13, 1);
+           //lcd.print("Punt: ");
+           lcd.print(puntuacion_blanco);
+           delay(1000);
+          
+           
+        }
+  }
 
 
 valor0=analogRead(pot0) / 11.36;
@@ -58,7 +88,7 @@ lcd.print("ang:");
 lcd.setCursor ( 5, 0 );
 lcd.print(valor0);
 
-valor1=analogRead(pot1) / 10.12871287;
+valor1=analogRead(pot1) / 8.525;
 Serial.print("-");
 Serial.print(valor1);
 lcd.setCursor ( 0, 1 );
@@ -74,7 +104,11 @@ lcd.print("est:");
 lcd.setCursor (14, 0 );
 lcd.print(estadopuls);
 
+lcd.setCursor(8, 1);
+lcd.print("Punt: ");
+ 
 
-delay(50);
+delay(10);
 lcd.clear();
+
 }
