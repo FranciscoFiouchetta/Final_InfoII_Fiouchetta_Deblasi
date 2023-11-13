@@ -25,7 +25,7 @@ int objetivo_y;
 
 int movimiento = 0;
 int cambiar_sentido = 1; // 1 ó (-1)
-int contacto = 4;
+int contacto = 0;
 int puntuacion = 0;
 int puntuacion_rojo=0;
 int puntuacion_amarillo=0;
