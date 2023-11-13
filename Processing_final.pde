@@ -3,7 +3,8 @@ Serial Puerto;
 
 import processing.video.*;
 
-Movie video;
+Movie video1;
+Movie video2;
 
 int boton_mouse=0;
 
@@ -29,16 +30,18 @@ int puntuacion = 0;
 int puntuacion_rojo=0;
 int puntuacion_amarillo=0;
 int puntuacion_blanco=0;
+int vidas=5;
 
+float timer;
 boolean videoVisible = true;
 boolean videoFinalizado = false;
 
 void setup() {
   size(1100, 500);
-  //frameRate(30);
-  video = new Movie(this, "C:/Users/admin/OneDrive/Escritorio/messi.mp4"); // Utilizar "/" en lugar de "\"
+  video1 = new Movie(this, "C:/Users/admin/OneDrive/Escritorio/proyecto final/messi.mp4"); // Utilizar "/" en lugar de "\"
+  video2 = new Movie(this, "C:/Users/admin/OneDrive/Escritorio/proyecto final/momo.mp4");
   println(Serial.list());
-  Puerto = new Serial(this, "COM9",4800);
+  Puerto = new Serial(this, "COM4",4800);
   Puerto.bufferUntil('\n');
 }
 
@@ -108,10 +111,17 @@ void JUEGO(){
     velocidad = float(part2);
     estado_boton = int(part3);
 
-    //print(angulo); // Muestra el valor convertido en la consola
-    //print(" ",velocidad); 
-    println(" ",estado_boton);
-
+    print(angulo); // Muestra el valor convertido en la consola
+    print(" ",velocidad); 
+    print(" ",estado_boton);
+    print(" ",vidas);
+    
+    print(" ",contacto);
+    print(" ", mouseX);
+    print(" ", mouseY);
+    
+    print(" ",video1.time());
+    println(" ",video2.time());
   }
   
   background(0, 170, 228);
@@ -145,8 +155,10 @@ void JUEGO(){
   if(posicion_y < 0){ // Reiniciar la variable 'tiempo' y la variable 'disparando' cuando la pelota toque la tierra
       disparando = 0;
       tiempo = 0;
+      vidas = vidas - 1;
+      posicion_y = 0;
   }
-  
+    
   // NIVELES
   if(contacto==0){
   nivel_1();
@@ -167,7 +179,6 @@ void JUEGO(){
   int ValorRojo = int(map(velocidad, 0, 100, 0, 255));
   int ValorAzul = int(map(velocidad, 0, 100, 255, 0));
   color ColorBarra =  color(ValorRojo,0,ValorAzul);
- 
   
   fill(128, 64, 0);
   stroke(0,0,0);
@@ -181,7 +192,7 @@ void JUEGO(){
   fill(255, 255, 255);
   rect(-20,400,30,30);
   
-  if(mouseX < 50 && mouseX > 20 && mouseY < 50 && mouseY > 20 && mousePressed == true){
+  if(mouseX < 50 && mouseX > 20 && mousePressed == true){
     boton_mouse = 0;
   }
   
@@ -190,21 +201,22 @@ void JUEGO(){
   strokeWeight(10);
   line(20, 0, 35, 0);
   
-  if(contacto==5){ //VIDEO
+  if(contacto == 5){ //VIDEO
+   
   rotate(-radianes);
   scale(1,-1);
+  frameRate(25);
+  
     if (videoVisible == true) {
-      video.play();
-      video.read();
-      image(video, 310, -425, 400, 400);
+      video1.play();
+      video1.read();
+      image(video1, 310, -425, 400, 400);
     }
-
-    if (2.0 == video.time()) {
-      for(int i=0;i<1;i++){
-      video.stop();
+    if (video1.time() > 3.8) {
+      video1.stop();
       videoVisible = false; // Oculta el video al finalizar la reproducción.
       videoFinalizado = true;
-      }
+      clear();
     }
     if(videoFinalizado == true){
       noStroke();
@@ -212,15 +224,55 @@ void JUEGO(){
       rect(320,-233,400,40);
       fill(0,0,0);
       text("Volver a intentar",380,-200);
-    }
-  if(mouseX < 720 && mouseX > 320 && mouseY < -233 && mouseY > -273 && mousePressed == true){
-     contacto = 0;
+      
+      if(mouseX < 760 && mouseX > 350 && mouseY < 257 && mouseY > 217 && mousePressed == true){
+          contacto = 0;
+          vidas = 5;
+          videoVisible = true;
+          videoFinalizado = false;
+        }
+    }  
   }
-  }
+  
+    if (vidas == 0) {
+      
+    rotate(-radianes);
+    scale(1,-1);
+    frameRate(30);
+  
+      if(videoVisible == true) {
+        video2.play();
+        video2.read();
+        image(video2, 310, -425, 400, 400);
+      }
+      
+      if(video2.time() > 3.8) {
+        video2.stop();
+        videoVisible = false; // Oculta el video al finalizar la reproducción.
+        videoFinalizado = true;
+        clear();
+      }
+      if(videoFinalizado == true){
+        noStroke();
+        fill(255,255,255);
+        rect(320,-233,400,40);
+        fill(0,0,0);
+        text("Volver a intentar",380,-200);
+        
+        if(mouseX < 760 && mouseX > 350 && mouseY < 257 && mouseY > 217 && mousePressed == true){
+          contacto = 0;
+          vidas = 5;
+          videoVisible = true;
+          videoFinalizado = false;
+        }
+      }
+   }
+   frameRate(60);
 }
 
 void nivel_1(){
   
+  if (vidas != 0){
   fill(255, 0, 0); // Objetivo a golpear
   rect(400,200,20,20);
   
@@ -235,7 +287,7 @@ void nivel_1(){
  
   fill(255, 255, 255);
   rect(400,150,20,30);
-  
+  }
 
   
   if((posicion_x > 400 && posicion_x < 420) && 
@@ -287,6 +339,7 @@ void nivel_1(){
 }
 void nivel_2(){
   
+  if (vidas != 0){
   fill(255, 0, 0); // Objetivo a golpear
   rect(880,200,20,20);
   
@@ -301,6 +354,7 @@ void nivel_2(){
  
   fill(255, 255, 255);
   rect(880,150,20,30);
+  }
   
   if((posicion_x > 880 && posicion_x < 900) && 
   (posicion_y > 200 && posicion_y < 220)){
@@ -361,6 +415,7 @@ void nivel_3(){
     cambiar_sentido = cambiar_sentido * (-1);
   }
   
+  if (vidas != 0){
   fill(255, 0, 0); // Objetivo a golpear
   rect(880,200 + movimiento,20,20);
   
@@ -375,6 +430,7 @@ void nivel_3(){
  
   fill(255, 255, 255);
   rect(880,150 + movimiento,20,30);
+  }
   
   if((posicion_x > 880 && posicion_x < 900) && 
   (posicion_y > 200 + movimiento && posicion_y < 220 + movimiento)){
@@ -429,6 +485,7 @@ void nivel_3(){
 }
 void nivel_4(){
   
+  if (vidas != 0){
   fill(255, 0, 0); // Objetivo a golpear
   rect(500,20,20,20);
   
@@ -447,6 +504,8 @@ void nivel_4(){
   //PARED
   fill(0, 0, 0);
   rect(230,0,40,300);
+
+  }
   
   if((posicion_x > 500 && posicion_x < 520) && 
   (posicion_y > 20 && posicion_y < 40)){
@@ -498,6 +557,12 @@ void nivel_4(){
       contacto = 4;
   }
   
+  if(posicion_x > 230 && posicion_x < 260 && posicion_y > 0 && posicion_y < 400){
+    disparando = 0;
+    tiempo = 0;
+    vidas = vidas - 1;
+    posicion_y = 0;
+  }
   
 }
 void nivel_5(){
@@ -508,6 +573,7 @@ void nivel_5(){
     cambiar_sentido = cambiar_sentido * (-1);
   }
   
+  if (vidas != 0){
   fill(255, 0, 0); // Objetivo a golpear
   rect(500 + movimiento,20,20,20);
   
@@ -526,6 +592,7 @@ void nivel_5(){
   //PARED
   fill(0, 0, 0);
   rect(230,0,40,300);
+  }
   
   if((posicion_x > 500 + movimiento && posicion_x < 520 + movimiento) && 
   (posicion_y > 20 && posicion_y < 40)){
@@ -575,6 +642,13 @@ void nivel_5(){
       tiempo = 0;
       
       contacto = 5;
+  }
+  
+  if(posicion_x > 230 && posicion_x < 260 && posicion_y > 0 && posicion_y < 400){
+    disparando = 0;
+    tiempo = 0;
+    vidas = vidas - 1;
+    posicion_y = 0;
   }
   
 }
