@@ -14,8 +14,8 @@ float angulo;
 float velocidad_estatica;
 float angulo_estatico;
 
-float posicion_x=0;
-float posicion_y=0;
+float posicion_x = 0;
+float posicion_y = 0;
 float tiempo=0;
 
 int estado_boton;
@@ -26,11 +26,7 @@ int objetivo_y;
 int movimiento = 0;
 int cambiar_sentido = 1; // 1 ó (-1)
 int contacto = 0;
-int puntuacion = 0;
-int puntuacion_rojo=0;
-int puntuacion_amarillo=0;
-int puntuacion_blanco=0;
-int vidas=5;
+int vidas = 5;
 
 float timer;
 boolean videoVisible = true;
@@ -292,9 +288,7 @@ void nivel_1(){
   
   if((posicion_x > 400 && posicion_x < 420) && 
   (posicion_y > 200 && posicion_y < 220)){
-    
-      puntuacion_rojo = 1;
-      
+
       Puerto.write("R"+puntuacion_rojo+"\n");
       
       posicion_x = 0;
@@ -309,8 +303,7 @@ void nivel_1(){
   if((posicion_x > 400 && posicion_x < 420) && 
   ((posicion_y > 220 && posicion_y < 240) || 
   (posicion_y < 200 && posicion_y > 180))){
-    
-      puntuacion_amarillo = 1;
+
       Puerto.write("A"+puntuacion_amarillo+"\n");
       posicion_x = 0;
       posicion_y = 0;
@@ -324,8 +317,7 @@ void nivel_1(){
   if((posicion_x > 400 && posicion_x < 420) && 
   ((posicion_y > 240 && posicion_y < 270) || 
   (posicion_y < 180 && posicion_y > 150))){
-    
-      puntuacion_blanco = 1;
+
       Puerto.write("B"+puntuacion_blanco+"\n");
       posicion_x = 0;
       posicion_y = 0;
@@ -359,8 +351,6 @@ void nivel_2(){
   if((posicion_x > 880 && posicion_x < 900) && 
   (posicion_y > 200 && posicion_y < 220)){
     
-      puntuacion_rojo = 1;
-      
        Puerto.write("R"+puntuacion_rojo+"\n");
      
       posicion_x = 0;
@@ -375,9 +365,7 @@ void nivel_2(){
   if((posicion_x > 880 && posicion_x < 900) && 
   ((posicion_y > 220 && posicion_y < 240) || 
   (posicion_y < 200 && posicion_y > 180))){
-    
-      puntuacion_amarillo = 1;
-      
+
       Puerto.write("A"+puntuacion_amarillo+"\n");
       
       posicion_x = 0;
@@ -392,8 +380,6 @@ void nivel_2(){
   if((posicion_x > 880 && posicion_x < 900) && 
   ((posicion_y > 240 && posicion_y < 270) || 
   (posicion_y < 180 && posicion_y > 150))){
-    
-      puntuacion_blanco = 1;
       
       Puerto.write("B"+puntuacion_blanco+"\n");
       
@@ -434,9 +420,7 @@ void nivel_3(){
   
   if((posicion_x > 880 && posicion_x < 900) && 
   (posicion_y > 200 + movimiento && posicion_y < 220 + movimiento)){
-    
-      puntuacion_rojo = 1;
-       
+
       Puerto.write("R"+puntuacion_rojo+"\n");
       
       posicion_x = 0;
@@ -452,8 +436,6 @@ void nivel_3(){
   ((posicion_y > 220 + movimiento && posicion_y < 240 + movimiento) || 
   (posicion_y < 200 + movimiento && posicion_y > 180 + movimiento))){
     
-      puntuacion_amarillo = 1;
-      
       Puerto.write("A"+puntuacion_amarillo+"\n");
       
       posicion_x = 0;
@@ -469,8 +451,6 @@ void nivel_3(){
   ((posicion_y > 240 + movimiento && posicion_y < 270 + movimiento) || 
   (posicion_y < 180 + movimiento && posicion_y > 150 + movimiento))){
     
-      puntuacion_blanco = 1;
-      
       Puerto.write("B"+puntuacion_blanco+"\n");
       
       posicion_x = 0;
@@ -509,9 +489,7 @@ void nivel_4(){
   
   if((posicion_x > 500 && posicion_x < 520) && 
   (posicion_y > 20 && posicion_y < 40)){
-    
-      puntuacion_rojo = 1;
-       
+  
       Puerto.write("R"+puntuacion_rojo+"\n");
       
       posicion_x = 0;
@@ -527,8 +505,6 @@ void nivel_4(){
   ((posicion_x > 520 && posicion_x < 540) || 
   (posicion_x < 500 && posicion_x > 480))){
     
-      puntuacion_amarillo = 1;
-      
       Puerto.write("A"+puntuacion_amarillo+"\n");
       
       posicion_x = 0;
@@ -544,8 +520,6 @@ void nivel_4(){
   ((posicion_x > 540 && posicion_x < 570) || 
   (posicion_x < 460 && posicion_x > 430))){
     
-      puntuacion_blanco = 1;
-      
       Puerto.write("B"+puntuacion_blanco+"\n");
       
       posicion_x = 0;
@@ -597,8 +571,6 @@ void nivel_5(){
   if((posicion_x > 500 + movimiento && posicion_x < 520 + movimiento) && 
   (posicion_y > 20 && posicion_y < 40)){
     
-      puntuacion_rojo = 1;
-       
       Puerto.write("R"+puntuacion_rojo+"\n");
       
       posicion_x = 0;
@@ -613,9 +585,7 @@ void nivel_5(){
   if((posicion_y > 20 && posicion_y < 40) && 
   ((posicion_x > 520 + movimiento && posicion_x < 540 + movimiento) || 
   (posicion_x < 500 + movimiento && posicion_x > 480 + movimiento))){
-    
-      puntuacion_amarillo = 1;
-      
+
       Puerto.write("A"+puntuacion_amarillo+"\n");
       
       posicion_x = 0;
@@ -630,9 +600,7 @@ void nivel_5(){
   if((posicion_y > 20 && posicion_y < 40) && 
   ((posicion_x > 540 + movimiento && posicion_x < 570 + movimiento) || 
   (posicion_x < 460 + movimiento && posicion_x > 430 + movimiento))){
-    
-      puntuacion_blanco = 1;
-      
+
       Puerto.write("B"+puntuacion_blanco+"\n");
       
       posicion_x = 0;
