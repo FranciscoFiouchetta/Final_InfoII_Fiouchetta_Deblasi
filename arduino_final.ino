@@ -77,7 +77,6 @@ if (Serial.available() > 0) {
 
 int valorpotenciometro0=analogRead(pot0) / 11.36;
 if (valorpotenciometro0 != valor0){
-Serial.print(valor0);
 lcd.setCursor ( 5, 0 );
 lcd.print("   ");
 lcd.setCursor ( 5, 0 );
@@ -87,7 +86,6 @@ valor0=valorpotenciometro0;
 }
 int valorpotenciometro1=analogRead(pot1) / 8.525;
 if (valorpotenciometro1!=valor1){
-Serial.print(valor1);
 lcd.setCursor ( 5, 1 );
 lcd.print("   ");
 lcd.setCursor ( 5, 1 );
@@ -96,8 +94,6 @@ delay(10);
 valor1=valorpotenciometro1;
 }
 int estadopuls=digitalRead(pinpuls);
-Serial.print("-");
-Serial.println(estadopuls);
 lcd.setCursor ( 9, 0);
 lcd.print("EST:");
 lcd.setCursor (14, 0 );
@@ -105,9 +101,14 @@ lcd.print(estadopuls);
 
 lcd.setCursor(9, 1);
 lcd.print("PNT: ");
+
+Serial.print(valor0);
+Serial.print("-");
+Serial.print(valor1);
+Serial.print("-");
+Serial.println(estadopuls);
  
 
 delay(10);
-
 
 }
