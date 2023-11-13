@@ -47,7 +47,7 @@ void setup() {
 
 void draw() {
   
-  background(0,160,0);
+  background(40,40,160);
   translate(0,500);
   noStroke();
   textSize(40);
@@ -652,6 +652,11 @@ void nivel_5(){
   }
   
 }
-
 void PUNTUACIONES(){};
-void INFO(){}
+void INFO(){
+background(40,40,160);
+fill(255,255,255);
+rect(200,-25,700,-450);
+fill(0,0,0);
+text("La meta del juego es golpear el objetivo \n con la pelotita disparada del cañon",225,-357);
+}
