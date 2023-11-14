@@ -14,8 +14,8 @@ float angulo;
 float velocidad_estatica;
 float angulo_estatico;
 
-float posicion_x = 0;
-float posicion_y = 0;
+float posicion_x=0;
+float posicion_y=0;
 float tiempo=0;
 
 int estado_boton;
@@ -26,9 +26,12 @@ int objetivo_y;
 int movimiento = 0;
 int cambiar_sentido = 1; // 1 ó (-1)
 int contacto = 0;
-int vidas = 5;
+int puntuacion = 0;
+
+int vidas=5;
 
 float timer;
+boolean muerte = false;
 boolean videoVisible = true;
 boolean videoFinalizado = false;
 
@@ -37,7 +40,7 @@ void setup() {
   video1 = new Movie(this, "C:/Users/admin/OneDrive/Escritorio/proyecto final/messi.mp4"); // Utilizar "/" en lugar de "\"
   video2 = new Movie(this, "C:/Users/admin/OneDrive/Escritorio/proyecto final/momo.mp4");
   println(Serial.list());
-  Puerto = new Serial(this, "COM4",4800);
+  Puerto = new Serial(this, "COM6",4800);
   Puerto.bufferUntil('\n');
 }
 
@@ -47,11 +50,6 @@ void draw() {
   translate(0,500);
   noStroke();
   textSize(40);
-  
-  fill(255,255,255);
-  rect(350,-140,400,40);
-  fill(0,0,0);
-  text("INFO",510,-107);
   
   fill(255,255,255);
   rect(350,-200,400,40);
@@ -79,12 +77,6 @@ void draw() {
   }
   if(boton_mouse == 2){
     PUNTUACIONES();
-  }
-  if(mouseX < 750 && mouseX > 350 && mouseY < 400 && mouseY > 360 && mousePressed == true){
-     boton_mouse = 3;
-  }
-  if(boton_mouse == 3){
-     INFO();
   }
 
 }
@@ -203,6 +195,8 @@ void JUEGO(){
   scale(1,-1);
   frameRate(25);
   
+  Puerto.write("M");
+  
     if (videoVisible == true) {
       video1.play();
       video1.read();
@@ -221,7 +215,7 @@ void JUEGO(){
       fill(0,0,0);
       text("Volver a intentar",380,-200);
       
-      if(mouseX < 760 && mouseX > 350 && mouseY < 257 && mouseY > 217 && mousePressed == true){
+      if(mouseX < 760 && mouseX > 360 && mouseY < 257 && mouseY > 217 && mousePressed == true){
           contacto = 0;
           vidas = 5;
           videoVisible = true;
@@ -235,6 +229,8 @@ void JUEGO(){
     rotate(-radianes);
     scale(1,-1);
     frameRate(30);
+    
+    Puerto.write("M");
   
       if(videoVisible == true) {
         video2.play();
@@ -255,7 +251,7 @@ void JUEGO(){
         fill(0,0,0);
         text("Volver a intentar",380,-200);
         
-        if(mouseX < 760 && mouseX > 350 && mouseY < 257 && mouseY > 217 && mousePressed == true){
+        if(mouseX < 760 && mouseX > 360 && mouseY < 257 && mouseY > 217 && mousePressed == true){
           contacto = 0;
           vidas = 5;
           videoVisible = true;
@@ -288,8 +284,8 @@ void nivel_1(){
   
   if((posicion_x > 400 && posicion_x < 420) && 
   (posicion_y > 200 && posicion_y < 220)){
-
-      Puerto.write("R"+puntuacion_rojo+"\n");
+      
+      Puerto.write("R");
       
       posicion_x = 0;
       posicion_y = 0;
@@ -304,7 +300,7 @@ void nivel_1(){
   ((posicion_y > 220 && posicion_y < 240) || 
   (posicion_y < 200 && posicion_y > 180))){
 
-      Puerto.write("A"+puntuacion_amarillo+"\n");
+      Puerto.write("A");
       posicion_x = 0;
       posicion_y = 0;
       
@@ -318,7 +314,7 @@ void nivel_1(){
   ((posicion_y > 240 && posicion_y < 270) || 
   (posicion_y < 180 && posicion_y > 150))){
 
-      Puerto.write("B"+puntuacion_blanco+"\n");
+      Puerto.write("B");
       posicion_x = 0;
       posicion_y = 0;
       
@@ -351,7 +347,8 @@ void nivel_2(){
   if((posicion_x > 880 && posicion_x < 900) && 
   (posicion_y > 200 && posicion_y < 220)){
     
-       Puerto.write("R"+puntuacion_rojo+"\n");
+      
+       Puerto.write("R");
      
       posicion_x = 0;
       posicion_y = 0;
@@ -365,8 +362,8 @@ void nivel_2(){
   if((posicion_x > 880 && posicion_x < 900) && 
   ((posicion_y > 220 && posicion_y < 240) || 
   (posicion_y < 200 && posicion_y > 180))){
-
-      Puerto.write("A"+puntuacion_amarillo+"\n");
+    
+      Puerto.write("A");
       
       posicion_x = 0;
       posicion_y = 0;
@@ -380,8 +377,9 @@ void nivel_2(){
   if((posicion_x > 880 && posicion_x < 900) && 
   ((posicion_y > 240 && posicion_y < 270) || 
   (posicion_y < 180 && posicion_y > 150))){
+    
       
-      Puerto.write("B"+puntuacion_blanco+"\n");
+      Puerto.write("B");
       
       posicion_x = 0;
       posicion_y = 0;
@@ -420,8 +418,8 @@ void nivel_3(){
   
   if((posicion_x > 880 && posicion_x < 900) && 
   (posicion_y > 200 + movimiento && posicion_y < 220 + movimiento)){
-
-      Puerto.write("R"+puntuacion_rojo+"\n");
+       
+      Puerto.write("R");
       
       posicion_x = 0;
       posicion_y = 0;
@@ -435,8 +433,9 @@ void nivel_3(){
   if((posicion_x > 880 && posicion_x < 900) && 
   ((posicion_y > 220 + movimiento && posicion_y < 240 + movimiento) || 
   (posicion_y < 200 + movimiento && posicion_y > 180 + movimiento))){
-    
-      Puerto.write("A"+puntuacion_amarillo+"\n");
+
+      
+      Puerto.write("A");
       
       posicion_x = 0;
       posicion_y = 0;
@@ -450,8 +449,9 @@ void nivel_3(){
   if((posicion_x > 880 && posicion_x < 900) && 
   ((posicion_y > 240 + movimiento && posicion_y < 270 + movimiento) || 
   (posicion_y < 180 + movimiento && posicion_y > 150 + movimiento))){
-    
-      Puerto.write("B"+puntuacion_blanco+"\n");
+
+      
+      Puerto.write("B");
       
       posicion_x = 0;
       posicion_y = 0;
@@ -489,8 +489,9 @@ void nivel_4(){
   
   if((posicion_x > 500 && posicion_x < 520) && 
   (posicion_y > 20 && posicion_y < 40)){
-  
-      Puerto.write("R"+puntuacion_rojo+"\n");
+
+       
+      Puerto.write("R");
       
       posicion_x = 0;
       posicion_y = 0;
@@ -505,7 +506,7 @@ void nivel_4(){
   ((posicion_x > 520 && posicion_x < 540) || 
   (posicion_x < 500 && posicion_x > 480))){
     
-      Puerto.write("A"+puntuacion_amarillo+"\n");
+      Puerto.write("A");
       
       posicion_x = 0;
       posicion_y = 0;
@@ -520,7 +521,7 @@ void nivel_4(){
   ((posicion_x > 540 && posicion_x < 570) || 
   (posicion_x < 460 && posicion_x > 430))){
     
-      Puerto.write("B"+puntuacion_blanco+"\n");
+      Puerto.write("B");
       
       posicion_x = 0;
       posicion_y = 0;
@@ -531,7 +532,7 @@ void nivel_4(){
       contacto = 4;
   }
   
-  if(posicion_x > 230 && posicion_x < 260 && posicion_y > 0 && posicion_y < 400){
+  if(posicion_x > 230 && posicion_x < 260 && posicion_y > 0 && posicion_y < 300){
     disparando = 0;
     tiempo = 0;
     vidas = vidas - 1;
@@ -571,7 +572,7 @@ void nivel_5(){
   if((posicion_x > 500 + movimiento && posicion_x < 520 + movimiento) && 
   (posicion_y > 20 && posicion_y < 40)){
     
-      Puerto.write("R"+puntuacion_rojo+"\n");
+      Puerto.write("R");
       
       posicion_x = 0;
       posicion_y = 0;
@@ -585,8 +586,10 @@ void nivel_5(){
   if((posicion_y > 20 && posicion_y < 40) && 
   ((posicion_x > 520 + movimiento && posicion_x < 540 + movimiento) || 
   (posicion_x < 500 + movimiento && posicion_x > 480 + movimiento))){
+    
 
-      Puerto.write("A"+puntuacion_amarillo+"\n");
+      
+      Puerto.write("A");
       
       posicion_x = 0;
       posicion_y = 0;
@@ -600,8 +603,8 @@ void nivel_5(){
   if((posicion_y > 20 && posicion_y < 40) && 
   ((posicion_x > 540 + movimiento && posicion_x < 570 + movimiento) || 
   (posicion_x < 460 + movimiento && posicion_x > 430 + movimiento))){
-
-      Puerto.write("B"+puntuacion_blanco+"\n");
+      
+      Puerto.write("B");
       
       posicion_x = 0;
       posicion_y = 0;
@@ -612,19 +615,12 @@ void nivel_5(){
       contacto = 5;
   }
   
-  if(posicion_x > 230 && posicion_x < 260 && posicion_y > 0 && posicion_y < 400){
+  if(posicion_x > 230 && posicion_x < 260 && posicion_y > 0 && posicion_y < 300){
     disparando = 0;
     tiempo = 0;
     vidas = vidas - 1;
     posicion_y = 0;
-  }
-  
+  }  
 }
+
 void PUNTUACIONES(){};
-void INFO(){
-background(40,40,160);
-fill(255,255,255);
-rect(200,-25,700,-450);
-fill(0,0,0);
-text("La meta del juego es golpear el objetivo \n con la pelotita disparada del cañon",225,-357);
-}
