@@ -22,11 +22,11 @@ delay(500);
 
 for(int i=0;i<12;i++){
 lcd.scrollDisplayLeft();
-delay(300);
+delay(150);
 }
 for(int i=0;i<12;i++){
 lcd.scrollDisplayLeft();
-delay(300);
+delay(150);
 }
 //lcd.clear();
 }
@@ -49,24 +49,25 @@ void loop(){
 if (Serial.available() > 0) {
      char letra = Serial.read();
     if (letra == 'R') {
-
             puntuacion+=100;
             letra == 'F';     
-        }// Mostrar la puntuación recibida desde Processing
+        }
    
     else if (letra == 'A') {
- 
             puntuacion+=50;
             letra == 'F';    
         }
      else if (letra == 'B') {
- 
            puntuacion+=25;
-           letra == 'F';    
+           letra == 'F'; 
         }
-           lcd.setCursor(13, 1);
+
+     else if (letra == 'H') {
+           puntuacion = 0;
+           letra == 'F'; 
+        }
+           lcd.setCursor(12, 1);
            lcd.print(puntuacion);
-           delay(1000);
   }
 
 
@@ -101,7 +102,10 @@ Serial.print(valor0);
 Serial.print("-");
 Serial.print(valor1);
 Serial.print("-");
-Serial.println(estadopuls);
+Serial.print(estadopuls);
+Serial.print("-");
+Serial.println(puntuacion);
+
 
 delay(10);
 
