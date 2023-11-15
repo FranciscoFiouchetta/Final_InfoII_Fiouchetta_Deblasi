@@ -32,6 +32,11 @@ float timer;
 boolean videoVisible = true;
 boolean videoFinalizado = false;
 
+int vector[] = new int[10];
+int i;
+int puntuacion;
+int aux;
+
 void setup() {
   size(1100, 500);
   video1 = new Movie(this, "C:/Users/admin/OneDrive/Escritorio/proyecto final/messi.mp4"); // Utilizar "/" en lugar de "\"
@@ -91,22 +96,20 @@ void JUEGO(){
     String part1 = parts[0];
     String part2 = parts[1];
     String part3 = parts[2];
+    String part4 = parts[3];
+
 
     angulo = float(part1); // Se coloca el contenido de esas cadenas en sus variables correspondientes
     velocidad = float(part2);
     estado_boton = int(part3);
+    puntuacion = int(part4);
 
     print(angulo); // Muestra el valor convertido en la consola
     print(" ",velocidad); 
     print(" ",estado_boton);
     print(" ",vidas);
     
-    print(" ",contacto);
-    print(" ", mouseX);
-    print(" ", mouseY);
-    
-    print(" ",video1.time());
-    println(" ",video2.time());
+    println(" ", puntuacion);
   }
   
   background(0, 170, 228);
@@ -186,6 +189,17 @@ void JUEGO(){
   strokeWeight(10);
   line(20, 0, 35, 0);
   
+    if(vidas == 0 || contacto == 5){ // Algoritmo de guardado de puntuaciones
+    
+      for(i=0;i<9;i++){
+        aux = vector[i+1];
+        vector[i+1] = vector[i];
+        vector[i] = aux;
+      }
+      vector[i] = puntuacion;
+      Puerto.write("H"); // Envia una señal para reiniciar la variable puntuacion
+    }
+  
   if(contacto == 5){ //VIDEO
    
   rotate(-radianes);
@@ -252,6 +266,7 @@ void JUEGO(){
         }
       }
    }
+    
    frameRate(60);
 }
 
@@ -520,7 +535,7 @@ void nivel_4(){
       contacto = 4;
   }
   
-  if(posicion_x > 230 && posicion_x < 260 && posicion_y > 0 && posicion_y < 400){
+  if(posicion_x > 230 && posicion_x < 260 && posicion_y > 0 && posicion_y < 300){
     disparando = 0;
     tiempo = 0;
     vidas = vidas - 1;
@@ -601,7 +616,7 @@ void nivel_5(){
       contacto = 5;
   }
   
-  if(posicion_x > 230 && posicion_x < 260 && posicion_y > 0 && posicion_y < 400){
+  if(posicion_x > 230 && posicion_x < 260 && posicion_y > 0 && posicion_y < 300){
     disparando = 0;
     tiempo = 0;
     vidas = vidas - 1;
