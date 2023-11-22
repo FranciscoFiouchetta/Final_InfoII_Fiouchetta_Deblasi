@@ -6,6 +6,9 @@ import processing.video.*;
 Movie video1;
 Movie video2;
 
+int vector[] = new int[10];
+Puntuacion miPuntuacion;
+
 int boton_mouse=0;
 
 float velocidad;
@@ -27,6 +30,7 @@ int movimiento = 0;
 int cambiar_sentido = 1; // 1 ó (-1)
 int contacto = 0;
 int vidas = 5;
+int punt;
 
 float timer;
 boolean videoVisible = true;
@@ -41,6 +45,7 @@ void setup() {
   size(1100, 500);
   video1 = new Movie(this, "C:/Users/admin/OneDrive/Escritorio/proyecto final/messi.mp4"); // Utilizar "/" en lugar de "\"
   video2 = new Movie(this, "C:/Users/admin/OneDrive/Escritorio/proyecto final/momo.mp4");
+ miPuntuacion = new Puntuacion(Puerto);
   println(Serial.list());
   Puerto = new Serial(this, "COM6",4800);
   Puerto.bufferUntil('\n');
@@ -102,14 +107,17 @@ void JUEGO(){
     angulo = float(part1); // Se coloca el contenido de esas cadenas en sus variables correspondientes
     velocidad = float(part2);
     estado_boton = int(part3);
-    puntuacion = int(part4);
+    punt = int(part4);
+
+    miPuntuacion.actualizarPuntuacion(vidas, contacto, punt);
+    vector = miPuntuacion.obtenerVector();
 
     print(angulo); // Muestra el valor convertido en la consola
     print(" ",velocidad); 
     print(" ",estado_boton);
     print(" ",vidas);
     
-    println(" ", puntuacion);
+    println(" ", punt);
   }
   
   background(0, 170, 228);
@@ -624,4 +632,77 @@ void nivel_5(){
   }
   
 }
-void PUNTUACIONES(){};
+void PUNTUACIONES(){
+
+  background(0,0,0);
+  noStroke();
+  fill(255);
+  rect(50,-50,1000,-400);
+  fill(5);
+  text("PUNTAJES",460,-400);
+  
+   int[] vector = miPuntuacion.obtenerVector();
+  
+  
+  text("PUNT 1: ",175,-350);
+  text(vector[0], 320,-350);
+  
+  text("PUNT 2: ",175,-300);
+  text(vector[1], 320,-300);
+  
+  text("PUNT 3: ",175,-250);
+  text(vector[2], 320,-250);
+  
+  text("PUNT 4: ",175,-200);
+  text(vector[3], 320,-200);
+  
+  text("PUNT 5: ",175,-150);
+  text(vector[4], 320,-150);
+  
+  
+  text("PUNT 1: ",750,-350);
+  text(vector[5], 895,-350);
+  
+  text("PUNT 2: ",750,-300);
+  text(vector[6], 895,-300);
+  
+  text("PUNT 3: ",750,-250);
+  text(vector[7], 895,-250);
+  
+  text("PUNT 4: ",750,-200);
+  text(vector[8], 895,-200);
+  
+  text("PUNT 5: ",750,-150);
+  text(vector[9], 895,-150);
+  
+  fill(255, 255, 255);
+  rect(10,-490,30,30);
+  
+  if(mouseX < 50 && mouseX > 20 && mousePressed == true){
+    boton_mouse = 0;
+  }
+};
+class Puntuacion{
+  
+  
+  int puntuacion;
+  
+  Serial Puerto;
+  
+   Puntuacion(Serial puerto) {
+    this.Puerto = puerto;
+    
+  }
+    
+  void actualizarPuntuacion(int vidas, int contacto, int punt) {
+    
+    if (vidas == 0 || contacto == 5) { // Algoritmo de guardado de puntuaciones
+      for (int i = 8; i > 0; i--) {
+        vector[i + 1] = vector[i];
+      }
+      puntuacion = punt;
+      vector[0] = puntuacion;
+      //Puerto.write("H"); // Envia una señal para reiniciar la variable puntuacion
+      
+    }
+  }
