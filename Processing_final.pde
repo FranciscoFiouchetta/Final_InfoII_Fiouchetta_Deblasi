@@ -30,22 +30,22 @@ int movimiento = 0;
 int cambiar_sentido = 1; // 1 ó (-1)
 int contacto = 0;
 int vidas = 5;
-int punt;
+int puntuacion;
+
 
 float timer;
 boolean videoVisible = true;
 boolean videoFinalizado = false;
+int salida = 0; // variable para salir de un bucle
 
-int vector[] = new int[10];
-int i;
-int puntuacion;
-int aux;
 
 void setup() {
   size(1100, 500);
   video1 = new Movie(this, "C:/Users/admin/OneDrive/Escritorio/proyecto final/messi.mp4"); // Utilizar "/" en lugar de "\"
   video2 = new Movie(this, "C:/Users/admin/OneDrive/Escritorio/proyecto final/momo.mp4");
- miPuntuacion = new Puntuacion(Puerto);
+  
+  miPuntuacion = new Puntuacion(Puerto);
+  
   println(Serial.list());
   Puerto = new Serial(this, "COM6",4800);
   Puerto.bufferUntil('\n');
@@ -103,21 +103,19 @@ void JUEGO(){
     String part3 = parts[2];
     String part4 = parts[3];
 
-
     angulo = float(part1); // Se coloca el contenido de esas cadenas en sus variables correspondientes
     velocidad = float(part2);
     estado_boton = int(part3);
-    punt = int(part4);
-
-    miPuntuacion.actualizarPuntuacion(vidas, contacto, punt);
-    vector = miPuntuacion.obtenerVector();
+    puntuacion = int(part4);
 
     print(angulo); // Muestra el valor convertido en la consola
     print(" ",velocidad); 
     print(" ",estado_boton);
+    print(" ",contacto);
     print(" ",vidas);
+    print(" ",salida);
     
-    println(" ", punt);
+    println(" ", puntuacion);
   }
   
   background(0, 170, 228);
@@ -154,7 +152,35 @@ void JUEGO(){
       vidas = vidas - 1;
       posicion_y = 0;
   }
+  
+      //LEDS
+  if(vidas == 5 && salida == 0){
+      Puerto.write("T");
+      salida = 1;
+  }
+  if(vidas == 4 && salida == 1){
+      Puerto.write("Y");
+      salida = 2;
     
+  }
+  if(vidas == 3 && salida == 2){
+      Puerto.write("U");
+      salida = 3;
+  }
+  if(vidas == 2 && salida == 3){
+      Puerto.write("I");
+      salida = 4;
+  }
+  if(vidas == 1 && salida == 4){
+      Puerto.write("O");
+      salida = 5;
+    
+  }
+  if(vidas == 0 && salida == 5){
+      Puerto.write("P");
+      salida = 6;
+  }
+  
   // NIVELES
   if(contacto==0){
   nivel_1();
@@ -197,17 +223,6 @@ void JUEGO(){
   strokeWeight(10);
   line(20, 0, 35, 0);
   
-    if(vidas == 0 || contacto == 5){ // Algoritmo de guardado de puntuaciones
-    
-      for(i=0;i<9;i++){
-        aux = vector[i+1];
-        vector[i+1] = vector[i];
-        vector[i] = aux;
-      }
-      vector[i] = puntuacion;
-      Puerto.write("H"); // Envia una señal para reiniciar la variable puntuacion
-    }
-  
   if(contacto == 5){ //VIDEO
    
   rotate(-radianes);
@@ -237,6 +252,8 @@ void JUEGO(){
           vidas = 5;
           videoVisible = true;
           videoFinalizado = false;
+          miPuntuacion.actualizarPuntuacion(puntuacion);
+          Puerto.write("H"); // Envia una señal para reiniciar la variable puntuacion
         }
     }  
   }
@@ -271,10 +288,13 @@ void JUEGO(){
           vidas = 5;
           videoVisible = true;
           videoFinalizado = false;
+          miPuntuacion.actualizarPuntuacion(puntuacion);
+          Puerto.write("H"); // Envia una señal para reiniciar la variable puntuacion
+          
         }
       }
    }
-    
+
    frameRate(60);
 }
 
@@ -297,7 +317,6 @@ void nivel_1(){
   rect(400,150,20,30);
   }
 
-  
   if((posicion_x > 400 && posicion_x < 420) && 
   (posicion_y > 200 && posicion_y < 220)){
 
@@ -312,9 +331,7 @@ void nivel_1(){
       contacto = 1;
   }
   
-  if((posicion_x > 400 && posicion_x < 420) && 
-  ((posicion_y > 220 && posicion_y < 240) || 
-  (posicion_y < 200 && posicion_y > 180))){
+  if((posicion_x > 400 && posicion_x < 420) && ((posicion_y > 220 && posicion_y < 240) || (posicion_y < 200 && posicion_y > 180))){
 
       Puerto.write("A");
       posicion_x = 0;
@@ -363,7 +380,7 @@ void nivel_2(){
   if((posicion_x > 880 && posicion_x < 900) && 
   (posicion_y > 200 && posicion_y < 220)){
     
-       Puerto.write("R");
+      Puerto.write("R");
      
       posicion_x = 0;
       posicion_y = 0;
@@ -632,8 +649,12 @@ void nivel_5(){
   }
   
 }
+
+
+  
 void PUNTUACIONES(){
 
+  
   background(0,0,0);
   noStroke();
   fill(255);
@@ -641,7 +662,7 @@ void PUNTUACIONES(){
   fill(5);
   text("PUNTAJES",460,-400);
   
-   int[] vector = miPuntuacion.obtenerVector();
+   //int[] vector = miPuntuacion.obtenerVector();
   
   
   text("PUNT 1: ",175,-350);
@@ -681,28 +702,5 @@ void PUNTUACIONES(){
   if(mouseX < 50 && mouseX > 20 && mousePressed == true){
     boton_mouse = 0;
   }
-};
-class Puntuacion{
   
-  
-  int puntuacion;
-  
-  Serial Puerto;
-  
-   Puntuacion(Serial puerto) {
-    this.Puerto = puerto;
-    
-  }
-    
-  void actualizarPuntuacion(int vidas, int contacto, int punt) {
-    
-    if (vidas == 0 || contacto == 5) { // Algoritmo de guardado de puntuaciones
-      for (int i = 8; i > 0; i--) {
-        vector[i + 1] = vector[i];
-      }
-      puntuacion = punt;
-      vector[0] = puntuacion;
-      //Puerto.write("H"); // Envia una señal para reiniciar la variable puntuacion
-      
-    }
-  }
+}
