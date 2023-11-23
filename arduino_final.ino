@@ -35,6 +35,11 @@ void setup() {
 lcd.init();
 lcd.backlight();
 Serial.begin(4800);
+pinMode(3, OUTPUT);
+pinMode(4, OUTPUT);
+pinMode(5, OUTPUT);
+pinMode(6, OUTPUT);
+pinMode(7, OUTPUT);
 bienvenida();
 lcd.clear();
 lcd.setCursor(0,0);
@@ -47,26 +52,78 @@ void loop(){
 
 //lcd.clear();
 if (Serial.available() > 0) {
+  
      char letra = Serial.read();
+     
     if (letra == 'R') {
-            puntuacion+=100;
+            puntuacion += 100;
             letra == 'F';     
         }
    
-    else if (letra == 'A') {
-            puntuacion+=50;
+    if (letra == 'A') {
+            puntuacion += 50;
             letra == 'F';    
         }
-     else if (letra == 'B') {
-           puntuacion+=25;
+    if (letra == 'B') {
+           puntuacion += 25;
            letra == 'F'; 
         }
 
-     else if (letra == 'H') {
+    if (letra == 'H') {
            puntuacion = 0;
            letra == 'F'; 
         }
-           lcd.setCursor(12, 1);
+    if (letra == 'T') {
+            digitalWrite(3, HIGH);
+            digitalWrite(4, HIGH);
+            digitalWrite(5, HIGH);
+            digitalWrite(6, HIGH);
+            digitalWrite(7, HIGH);
+            letra == 'F';
+        }
+   
+    if (letra == 'Y') {
+            digitalWrite(3, HIGH);
+            digitalWrite(4, HIGH);
+            digitalWrite(5, HIGH);
+            digitalWrite(6, HIGH);
+            digitalWrite(7, LOW);
+            letra == 'F';
+        }
+     if (letra == 'U') {
+           digitalWrite(3, HIGH);
+            digitalWrite(4, HIGH);
+            digitalWrite(5, HIGH);
+            digitalWrite(6, LOW);
+            digitalWrite(7, LOW);
+            letra == 'F';
+        }
+
+     if (letra == 'I') {
+           digitalWrite(3, HIGH);
+            digitalWrite(4, HIGH);
+            digitalWrite(5, LOW);
+            digitalWrite(6, LOW);
+            digitalWrite(7, LOW);
+            letra == 'F';
+        }
+     if (letra == 'O') {
+           digitalWrite(3, HIGH);
+            digitalWrite(4, LOW);
+            digitalWrite(5, LOW);
+            digitalWrite(6, LOW);
+            digitalWrite(7, LOW);
+            letra == 'F';
+        }
+     if (letra == 'P') {
+           digitalWrite(3, LOW);
+            digitalWrite(4, LOW);
+            digitalWrite(5, LOW);
+            digitalWrite(6, LOW);
+            digitalWrite(7, LOW);
+            letra == 'F';
+        }
+           lcd.setCursor(13, 1);
            lcd.print(puntuacion);
   }
 
