@@ -9,6 +9,8 @@ Movie video2;
 int vector[] = new int[10];
 Puntuacion miPuntuacion;
 
+Leds miLeds;
+
 int boton_mouse=0;
 
 float velocidad;
@@ -37,7 +39,7 @@ float timer;
 boolean videoVisible = true;
 boolean videoFinalizado = false;
 int salida = 0; // variable para salir de un bucle
-
+//boolean reiniciarJuego = false;
 
 void setup() {
   size(1100, 500);
@@ -45,6 +47,9 @@ void setup() {
   video2 = new Movie(this, "C:/Users/admin/OneDrive/Escritorio/proyecto final/momo.mp4");
   
   miPuntuacion = new Puntuacion(Puerto);
+  
+  miLeds = new Leds();
+  
   
   println(Serial.list());
   Puerto = new Serial(this, "COM6",4800);
@@ -85,7 +90,7 @@ void draw() {
   if(boton_mouse == 2){
     PUNTUACIONES();
   }
-
+ 
 }
 void JUEGO(){
   
@@ -96,8 +101,12 @@ void JUEGO(){
   if (inString != null) {
 
     inString = trim(inString); // Elimina los espacios en blanco
+ 
 
     String[] parts = inString.split("-"); // Divide la cadena en tres cadenas distintas
+     
+    if (parts.length >= 4){
+    
     String part1 = parts[0];
     String part2 = parts[1];
     String part3 = parts[2];
@@ -107,7 +116,7 @@ void JUEGO(){
     velocidad = float(part2);
     estado_boton = int(part3);
     puntuacion = int(part4);
-
+ }
     print(angulo); // Muestra el valor convertido en la consola
     print(" ",velocidad); 
     print(" ",estado_boton);
@@ -154,32 +163,7 @@ void JUEGO(){
   }
   
       //LEDS
-  if(vidas == 5 && salida == 0){
-      Puerto.write("T");
-      salida = 1;
-  }
-  if(vidas == 4 && salida == 1){
-      Puerto.write("Y");
-      salida = 2;
-    
-  }
-  if(vidas == 3 && salida == 2){
-      Puerto.write("U");
-      salida = 3;
-  }
-  if(vidas == 2 && salida == 3){
-      Puerto.write("I");
-      salida = 4;
-  }
-  if(vidas == 1 && salida == 4){
-      Puerto.write("O");
-      salida = 5;
-    
-  }
-  if(vidas == 0 && salida == 5){
-      Puerto.write("P");
-      salida = 6;
-  }
+  miLeds.leds_Vida(vidas);
   
   // NIVELES
   if(contacto==0){
@@ -255,8 +239,13 @@ void JUEGO(){
           miPuntuacion.actualizarPuntuacion(puntuacion);
           Puerto.write("H"); // Envia una señal para reiniciar la variable puntuacion
         }
-    }  
-  }
+        /*if (reiniciarJuego) {
+           miLeds.reiniciarLeds();
+           reiniciarJuego = false; //  restablecer esta variable después de reiniciar
+ */ 
+
+}  
+}
   
     if (vidas == 0) {
       
@@ -703,4 +692,91 @@ void PUNTUACIONES(){
     boton_mouse = 0;
   }
   
+}
+  class Leds {
+  
+  int salida=0;
+  
+ void leds_Vida(int vidas) {
+    
+    if (vidas == 5 && salida == 0) {
+      Puerto.write("T");
+      salida = 1;
+    }
+    if (vidas == 4 && salida == 1) {
+      Puerto.write("Y");
+      salida = 2;
+    }
+    if (vidas == 3 && salida == 2) {
+      Puerto.write("U");
+      salida = 3;
+    }
+    if (vidas == 2 && salida == 3) {
+      Puerto.write("I");
+      salida =4;
+    }
+    if (vidas == 1 && salida == 4) {
+      Puerto.write("O");
+      salida = 5;
+    }
+    if (vidas == 0 && salida == 5) {
+      Puerto.write("P");
+      salida = 6; 
+    }
+  }
+   void reiniciarLeds() {
+    salida = 0;
+  }
+  
+  
+}
+  import processing.serial.Serial;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
+
+class Puntuacion{
+  
+  int puntuacion;
+  Serial Puerto;
+  BufferedWriter writer;
+   
+   
+  Puntuacion(Serial puerto) {
+    this.Puerto = puerto;
+     try {
+     writer = new BufferedWriter(new FileWriter("puntuaciones.txt", true));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+    
+  void actualizarPuntuacion(int puntuacion) {
+    
+      for (int i = 8; i >= 0; i--) {
+        vector[i + 1] = vector[i];
+      }
+      vector[0] = puntuacion;      
+      
+      guardarEnArchivo(puntuacion);
+  }
+  private void guardarEnArchivo(int puntuacion) {
+    try {
+      writer.write(Integer.toString(puntuacion));
+      writer.newLine();
+      writer.flush(); // Asegura que los datos se escriban en el archivo
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+  
+  void cerrar() {
+    try {
+      writer.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
 }
