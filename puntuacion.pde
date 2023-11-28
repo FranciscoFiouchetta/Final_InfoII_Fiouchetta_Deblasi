@@ -1,46 +1,34 @@
+import java.io.FileWriter;
+
 class Puntuacion{
   
   int puntuacion;
   Serial Puerto;
- // BufferedWriter writer;
 
   Puntuacion(Serial puerto) {
     
     this.Puerto = puerto;
   } 
-     /*try {
-     writer = new BufferedWriter(new FileWriter("puntuaciones.txt", true));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-    */
   void actualizarPuntuacion(int puntuacion) {
     
-      for (int i = 8; i >= 0; i--) {
-        vector[i + 1] = vector[i];
-      }
-      vector[0] = puntuacion;      
+    try{
+      FileWriter fw = new FileWriter("C:/Users/admin/OneDrive/Escritorio/proyecto final/puntuaciones.txt");
       
-     // guardarEnArchivo(puntuacion);
-  }
-  }
- /* private void guardarEnArchivo(int puntuacion) {
-    try {
-      writer.write(Integer.toString(puntuacion));
-      writer.newLine();
-      writer.flush(); // Asegura que los datos se escriban en el archivo
-    } catch (IOException e) {
-      e.printStackTrace();
+      for (int i = 8; i >= 0; i--) {
+        vector[i+1] = vector[i];
+      }
+      vector[0] = puntuacion;
+      
+      for (int i = 0; i < 10; i++) {
+        fw.write(Integer.toString(vector[i]));
+        fw.write("\n");
+      }
+      
+      fw.close();
+      
+    }catch (IOException e){
+      println("Error");
     }
+      
   }
-  
-  void cerrar() {
-    try {
-      writer.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-*/
 }
